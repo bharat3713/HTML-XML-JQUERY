@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>Employee Timesheet Report</title>
+    <link rel="stylesheet" href="assets/css/styles.css">
+    <link rel="stylesheet" href="assets/css/responsive.css">
+    <script type="text/javascript" src="assets/js/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $.ajax({
+                type: "GET",
+                url: "assets/db/timesheets.xml",
+                dataType: "xml",
+                success: xmlParser,
+
+                error: test
+            });
+        });
+        function test(xml) {
+            alert("XML not loaded....");
+        }
+        function xmlParser(xml) {
+            $(xml).find("TIMESHEETS").each(function () {
+                var totalEntry = $(this).find("empolyee").length;
+                var myObj = $(this).find("empolyee");
+                var totalWork;
+                for (i = 0; i < totalEntry; i++) {
+                    // alert();
+                    //alert($(this).find("empolyee").eq(i).attr('name')+"####");
+                    totalWork = $(this).find("empolyee").eq(i).children(0).length;
+                    $("<li id='" + i + "'><a href='#' id='" + i + "'>" + $(this).find("empolyee").eq(i).attr('name') + "</a>").appendTo("#employeeName");
+                    $("<li id='" + i + "'><a href='#' id='" + i + "'>" + $(this).find("empolyee").eq(i).attr('name') + "</a>").appendTo("#mobileMenu");
+
+
+                }
+
+                $("#employeeName  li a").click(function () {
+                    //alert();
+
+                    $("#gridBlockLeft").empty();
+                    $("#gridBlockMid").empty();
+                    $("#gridBlockRight").empty();
+                    $("#empImage").empty();
+                    $("#empfullName").empty();
+                    $("#empfullName").empty();
+                    $('.gridBlockVisible').css('display', 'none');
+                    $('.gridBlock').css('display', 'block');
+                    $('<div>Week_days</div>').appendTo("#gridBlockLeft");
+                    $('<div>Expected_Hour</div>').appendTo("#gridBlockMid");
+                    $('<div>Actual_Hour</div>').appendTo("#gridBlockRight");
+                    var m = this.id
+                    for (j = 0; j < 5; j++) {
+                        $('<div>' + myObj.eq(m).find("weekday").eq(j).text() + '</div>').appendTo("#gridBlockLeft");
+                        $('<div>' + myObj.eq(m).find("expected").eq(j).text() + '</div>').appendTo("#gridBlockMid");
+                        $('<div>' + myObj.eq(m).find("actual").eq(j).text() + '</div>').appendTo("#gridBlockRight");
+                        $("#" + j + "_div").empty();
+                        //<div class="greyBar"></div>
+                        //<div class="blueBar"></div>
+                        //$('<div class="greyBar"></div>').appendTo("#"+j+"_div" );
+                        //$("#"+j+"_div").append("<div class='greyBar'></div>").css('background-color','#ff0000');
+                        //$('<div class="greyBar"></div>').css('background-color','#ff0000');
+                        //$('<div class="blueBar"></div>').appendTo( "#"+j+"_div" );
+
+
+                        var $divBlue = $("<div class='blueBar'></div>")
+                        $divBlue.css('height', myObj.eq(m).find("actual").eq(j).text() + '0%');
+                        var $divGrey = $("<div class='greyBar'></div>")
+                        $divGrey.css('height', myObj.eq(m).find("expected").eq(j).text() + '0%');
+
+                        $("#" + j + "_div").append($divBlue);
+                        $("#" + j + "_div").append($divGrey);
+                    }
+                    $("<img src='" + myObj.eq(m).attr('picture') + "'/>").appendTo("#empImage");
+                    $('<span>' + myObj.eq(m).attr('name') + '</span>').appendTo("#empfullName");
+                    $('<span>' + myObj.eq(m).attr('projectName') + '</span>').appendTo("#empfullName");
+                });
+                $("#mobileMenu  li a").click(function () {
+                    //alert();
+                    $(mobileMenuDiv).hide();
+                    $("#gridBlockLeft").empty();
+                    $("#gridBlockMid").empty();
+                    $("#gridBlockRight").empty();
+                    $("#empImage").empty();
+                    $("#empfullName").empty();
+                    $("#empfullName").empty();
+                    $('.gridBlockVisible').css('display', 'none');
+                    $('.gridBlock').css('display', 'block');
+                    $('<div>Week_days</div>').appendTo("#gridBlockLeft");
+                    $('<div>Expected_Hour</div>').appendTo("#gridBlockMid");
+                    $('<div>Actual_Hour</div>').appendTo("#gridBlockRight");
+                    var m = this.id
+                    for (j = 0; j < 5; j++) {
+                        $('<div>' + myObj.eq(m).find("weekday").eq(j).text() + '</div>').appendTo("#gridBlockLeft");
+                        $('<div>' + myObj.eq(m).find("expected").eq(j).text() + '</div>').appendTo("#gridBlockMid");
+                        $('<div>' + myObj.eq(m).find("actual").eq(j).text() + '</div>').appendTo("#gridBlockRight");
+                        $("#" + j + "_div").empty();
+                        //<div class="greyBar"></div>
+                        //<div class="blueBar"></div>
+                        //$('<div class="greyBar"></div>').appendTo("#"+j+"_div" );
+                        //$("#"+j+"_div").append("<div class='greyBar'></div>").css('background-color','#ff0000');
+                        //$('<div class="greyBar"></div>').css('background-color','#ff0000');
+                        //$('<div class="blueBar"></div>').appendTo( "#"+j+"_div" );
+
+
+                        var $divBlue = $("<div class='blueBar'></div>")
+                        $divBlue.css('height', myObj.eq(m).find("actual").eq(j).text() + '0%');
+                        var $divGrey = $("<div class='greyBar'></div>")
+                        $divGrey.css('height', myObj.eq(m).find("expected").eq(j).text() + '0%');
+
+
+
+                        $("#" + j + "_div").append($divBlue);
+                        $("#" + j + "_div").append($divGrey);
+                    }
+                    $("<img src='" + myObj.eq(m).attr('picture') + "'/>").appendTo("#empImage");
+                    $('<span>' + myObj.eq(m).attr('name') + '</span>').appendTo("#empfullName");
+                    $('<span>' + myObj.eq(m).attr('projectName') + '</span>').appendTo("#empfullName");
+                });
+            });
+
+        }
+        function openMobile() {
+            //alert('hi');
+            $("#mobileMenuDiv").show();
+
+        }
+
+    </script>
+</head>
+<body>
+    <section class="wraper">
+        <header>
+            <div class="discrp">Employee Timesheet Report</div>
+        </header>
+        <section class="section_left">
+            <div class="empHeader">Employee</div>
+            <ul id="employeeName" class="">
+            </ul>
+        </section>
+        <section class="section_midlle">
+            <div class="empMenuNav" onclick="openMobile();">Employee</div>
+            <div id="mobileMenuDiv">
+                <ul id="mobileMenu" class="">
+                </ul>
+            </div>
+            <div class="nameHeader">
+                <div id="empImage" class="empImage">
+                    <img src="assets/images/employee/disable.jpg" />
+                </div>
+                <div id="empfullName" class="empfullName"><span class="disable">User Name</span> <span class="disable">Project Name, Part Time/Full Time</span> </div>
+            </div>
+            <section class="timesheetGrid">
+                <section id="gridBlockVisible" class="gridBlockVisible">Choosee Employee name from left/top navigation menu to see the timesheet entry</section>
+                <section id="gridBlockLeft" class="gridBlock"></section>
+                <section id="gridBlockMid" class="gridBlock"></section>
+                <section id="gridBlockRight" class="gridBlock"></section>
+            </section>
+        </section>
+        <section class="section_right">
+            <div class="graphBlock">
+                <div class="yAxis">
+                    <div>Expected and Actual Hours</div>
+                </div>
+                <div class="hourHolder">
+                    <div>10</div>
+                    <div>9</div>
+                    <div>8</div>
+                    <div>7</div>
+                    <div>6</div>
+                    <div>5</div>
+                    <div>4</div>
+                    <div>3</div>
+                    <div>2</div>
+                    <div>1</div>
+                </div>
+                <div id="barHolder" class="barHolder">
+                    <div id="4_div" class="bar"></div>
+                    <div id="3_div" class="bar"></div>
+                    <div id="2_div" class="bar"></div>
+                    <div id="1_div" class="bar"></div>
+                    <div id="0_div" class="bar"></div>
+                </div>
+            </div>
+            <div class="daynameHolder">
+                <div class="noData">Days</div>
+                <div class="daysNameHolder">
+                    <div>Mon</div>
+                    <div>Tue</div>
+                    <div>Wed</div>
+                    <div>Thu</div>
+                    <div>Fri</div>
+                </div>
+            </div>
+        </section>
+        <div class="clear_fix"></div>
+        <footer>© Bharat Kumar</footer>
+    </section>
+</body>
+</html>
